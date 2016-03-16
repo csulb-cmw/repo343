@@ -93,13 +93,14 @@ def ignore( path, repo_directory_path ):
         return True
 
     dot_split = path.split( '.' )
-    if dot_split[-1][0] == '.':
+    if split_path[-1][0] == '.':
         return True
     if( dot_split[-1] == "pyc" ):
         return True
     return False
 
 def calculate_check_sum( filename ):
+    print filename
     file = open(filename, 'rb')
     sum = 1
     byte = file.read(1)
