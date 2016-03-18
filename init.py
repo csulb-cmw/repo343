@@ -22,7 +22,7 @@ def init(argv):
     os.makedirs(cwd + "/repo343/manifests" )
 
     #do the first commit
-    commit.commit( "initial", cwd + "/repo343/manifests" )
+    commit.commit( "initial", cwd + "/repo343/manifests", previous_manifest_id )
 
 def create_repo_directory( current_working_dir ):
     """Creates a new repo directory, or errors and exits if it exists already."
