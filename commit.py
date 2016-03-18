@@ -7,12 +7,21 @@
 # Distributed under terms of the MIT license.
 import os
 import shutil
-
+from time import gmtime, strftime
 """
 
 """
 
-def commit(commit_code, manifest_dir_path ):
+def commit(arg1):
+    """TODO: Docstring for commit.
+
+    :arg1: TODO
+    :returns: TODO
+
+    """
+    pass
+
+def commit(commit_code, manifest_dir_path, previous_manifest_id ):
     """TODO: Docstring for commit.
 
     :arg1: TODO
@@ -20,11 +29,18 @@ def commit(commit_code, manifest_dir_path ):
 
     """
 
-    # create a file for writing the manifest data
-    man_file = open( manifest_dir_path+"/"+commit_code, 'w' )
-    
-    # write any meta data TODO
+    date_string = strftime("%Y-%m-%d_%H:%M:%S", gmtime() )
 
+    # create a file for writing the manifest data
+    man_file = open( manifest_dir_path+"/"+date_string, 'w' )
+    
+    # write any meta data
+    man_file.write( "repo343_version " + repo343_version );
+    man_file.write( "date " + date_string +'\"' )
+    man_file.write( "previous_manifest_id " + previous_manifest_id )
+    man_file.write( "=================================\n" )
+    man_file.write( commit_code + "\n")
+    man_file.write( "=================================\n" )
     cwd = os.getcwd()
     repo_name = cwd.split('/')[-1]
     for subdir, dirs, files in os.walk( os.getcwd() ):
