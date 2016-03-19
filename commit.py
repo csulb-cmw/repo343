@@ -8,6 +8,8 @@
 import os
 import shutil
 from time import gmtime, strftime
+#import repo343
+
 """
 
 """
@@ -35,7 +37,7 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id ):
     man_file = open( manifest_dir_path+"/"+date_string, 'w' )
     
     # write any meta data
-    man_file.write( "repo343_version " + repo343_version );
+    # man_file.write( "repo343_version " + repo343.repo343_version );
     man_file.write( "date " + date_string +'\"' )
     man_file.write( "previous_manifest_id " + previous_manifest_id )
     man_file.write( "=================================\n" )
