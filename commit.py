@@ -71,7 +71,6 @@ def process_file( repo_root, man_file, file_path, repo_directory_path ):
     :repo_directory_path: path to project root
 
     """
-    print file_path
 
     # check if the leaf folder exists; create it if not
     if not os.path.exists(repo_directory_path):
@@ -107,7 +106,6 @@ def ignore( path, repo_directory_path ):
     return False
 
 def calculate_check_sum( filename ):
-    print filename
     file = open(filename, 'rb')
     sum = 1
     byte = file.read(1)
