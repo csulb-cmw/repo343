@@ -13,6 +13,14 @@ import commit
 
 """
 def init(argv):
+    """perform a repo initialization
+
+    :argv: the argument vars passed from the console.
+    
+    TODO argv should be preprocessed.
+    
+    """
+
     cwd = os.getcwd()
 
     # create manifests folder
@@ -33,5 +41,3 @@ def create_repo_directory( current_working_dir ):
         print( "Error: repo exists." )
         exit()
     os.makedirs(current_working_dir + "/repo343")
-
-

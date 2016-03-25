@@ -8,41 +8,30 @@
 import os
 import shutil
 from time import gmtime, strftime
-#import repo343
 
 """
 
 """
 
-def commit(arg1):
-    """TODO: Docstring for commit.
+def commit(commit_code, manifest_dir_path, previous_manifest_id):
+    """perform a repo commit
 
-    :arg1: TODO
-    :returns: TODO
-
-    """
-    pass
-
-def commit(commit_code, manifest_dir_path, previous_manifest_id ):
-    """TODO: Docstring for commit.
-
-    :arg1: TODO
-    :returns: TODO
+    :commit_code: human readable commit description.
+    :manifest_dir_path: path to the repo manifest directory
+    :previous_manifest_id: id of the last commit
 
     """
-
-    date_string = strftime("%Y-%m-%d_%H:%M:%S", gmtime() )
+    date_string = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
 
     # create a file for writing the manifest data
-    man_file = open( manifest_dir_path+"/"+date_string, 'w' )
+    man_file = open(manifest_dir_path+"/"+date_string, 'w')
     
     # write any meta data
-    # man_file.write( "repo343_version " + repo343.repo343_version );
-    man_file.write( "date " + date_string +'\"' )
-    man_file.write( "previous_manifest_id " + previous_manifest_id )
-    man_file.write( "=================================\n" )
-    man_file.write( commit_code + "\n")
-    man_file.write( "=================================\n" )
+    man_file.write('date ' + date_string +'\"')
+    man_file.write('previous_manifest_id ' + previous_manifest_id + '\n')
+    man_file.write('=================================\n')
+    man_file.write(commit_code + "\n")
+    man_file.write('=================================\n')
     cwd = os.getcwd()
     repo_name = cwd.split('/')[-1]
     for subdir, dirs, files in os.walk( os.getcwd() ):
@@ -54,19 +43,19 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id ):
     pass
 
 def get_repo_root():
-    """Gets the repo root for the cwd.
-    :returns: TODO
-
+    """ :returns: The repo root for the cwd.
     """
     return os.getcwd(); # TODO add search for root if we're in a sub directory
 
-def handle_path( repo_name, repo_root, man_file, path, ):
-    """TODO: Docstring for handle_path.
-    :current_working_dir: TODO
-    :path: TODO
-    :returns: TODO
-    """
+def handle_path( repo_name, repo_root, man_file, path ):
+    """Checks if the repo is responsible for this file, and commits it if so.
 
+    :repo_name: Repo name
+    :repo_root: Root of project directory
+    :man_file: Root to manifest file handle
+    :path: path of the file to process
+
+    """
     relative_path = path[1+len(repo_root):]
     if ignore( path, repo_root+"/repo343/" ):
         return
@@ -76,12 +65,12 @@ def handle_path( repo_name, repo_root, man_file, path, ):
 def process_file( repo_root, man_file, file_path, repo_directory_path ):
     """Where the magic happens 
 
-    :file_path: TODO
-    :repo_directory_path: TODO
-    :returns: TODO
+    :repo_root: Root of project directory
+    :man_file: Root to manifest file handle
+    :file_path: path of the file to process
+    :repo_directory_path: path to project root
 
     """
-
     print file_path
 
     # check if the leaf folder exists; create it if not
