@@ -4,7 +4,7 @@ Part one of the CECS-343 VCS project.
 # team CMW
 * Cory Knapp (knapp.cory@gmail.com) [Team lead]
 * Mukesh Sehdev (sehdev.mukesh@yahoo.com)
-* William Perex (billyreaper@yahoo.com)
+* William Perez (billyreaper@yahoo.com)
 
 # introduction
 This is part one our version control system, which only implements the
