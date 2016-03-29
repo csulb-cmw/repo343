@@ -24,48 +24,40 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id):
     date_string = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
 
     # create a file for writing the manifest data
-    man_file = open(manifest_dir_path+"/"+date_string, 'w')
-    
+    man_file_path = os.path.join(manifest_dir_path, date_string)
+    man_file = open(man_file_path, 'w')
+
     # write any meta data
     man_file.write('date ' + date_string +'\"')
     man_file.write('previous_manifest_id ' + previous_manifest_id + '\n')
     man_file.write('=================================\n')
     man_file.write(commit_code + "\n")
     man_file.write('=================================\n')
-    cwd = os.getcwd()
-    repo_name = cwd.split('/')[-1]
-    for subdir, dirs, files in os.walk( os.getcwd() ):
+
+    project_root = get_project_root()
+    #the repo name is the same as the name of the directory containing it's root
+    repo_name = os.path.split(project_root)[-1]
+
+    for subdir, dirs, files in os.walk(project_root):
         for file in files:
             path = os.path.join(subdir, file)
-            handle_path( repo_name, get_repo_root(), man_file, path )
-
+            if not ignore(path, repo_root+"/repo343/"):
+                process_file(
+                        project_root, man_file, path,
+                        os.path.join(
+                            project_root,"repo343",repo_name, file) )
 
     pass
 
-def get_repo_root():
+def get_project_root():
     """ :returns: The repo root for the cwd.
     """
     return os.getcwd(); # TODO add search for root if we're in a sub directory
 
-def handle_path( repo_name, repo_root, man_file, path ):
-    """Checks if the repo is responsible for this file, and commits it if so.
-
-    :repo_name: Repo name
-    :repo_root: Root of project directory
-    :man_file: Root to manifest file handle
-    :path: path of the file to process
-
-    """
-    relative_path = path[1+len(repo_root):]
-    if ignore( path, repo_root+"/repo343/" ):
-        return
-
-    process_file( repo_root, man_file, path, repo_root+"/repo343/"+repo_name+"/"+relative_path )
-
-def process_file( repo_root, man_file, file_path, repo_directory_path ):
+def process_file( project_root, man_file, file_path, repo_directory_path ):
     """Where the magic happens 
 
-    :repo_root: Root of project directory
+    :project_root: Root of project directory
     :man_file: Root to manifest file handle
     :file_path: path of the file to process
     :repo_directory_path: path to project root
@@ -94,14 +86,22 @@ def ignore( path, repo_directory_path ):
     :returns true if it's to be ignored, false otherwise"""
 
     # make sure we're not backing up the repo
-    split_path = path.split( '/' )
-    if repo_directory_path == path[0:len(repo_directory_path)]:
+    split_path = os.path.split(path)
+    if split_path[-1] == 'repo343':
         return True
 
-    dot_split = path.split( '.' )
+    #ignore files that start with a '.', as a UNIX convention, and also because
+    #sometimes other software drops .files without tell the user.
     if split_path[-1][0] == '.':
         return True
-    if( dot_split[-1] == "pyc" ):
+
+    #ignore some file types we know we'll never want to back up
+    #for my friends who are new to python the underscore in the next line means
+    #we're ignoring an unwanted return value.  splitext returns a name and an
+    #extension, and we only care about the extension.
+    _, extention = os.path.splitext(path)
+    ignored_types = ['pyc', 'o']
+    if extention in ignored_types:
         return True
     return False
 
