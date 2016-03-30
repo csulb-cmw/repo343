@@ -36,12 +36,12 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id):
 
     project_root = get_project_root()
     #the repo name is the same as the name of the directory containing it's root
-    repo_name = os.path.split(project_root)[-1]
+    _, repo_name = os.path.split(project_root)
 
     for subdir, dirs, files in os.walk(project_root):
         for file in files:
             path = os.path.join(subdir, file)
-            if not ignore(path, repo_root+"/repo343/"):
+            if not ignore(path):
                 process_file(
                         project_root, man_file, path,
                         os.path.join(
@@ -70,13 +70,23 @@ def process_file( project_root, man_file, file_path, repo_directory_path ):
 
     check_sum = calculate_check_sum( file_path )
     # copy the file to the leaf folder
-    shutil.copyfile( file_path, repo_directory_path+"/"+str(check_sum) )
+    copy_destination_path = os.path.join(repo_directory_path, str(check_sum))
+    shutil.copyfile(file_path, copy_destination_path)
 
-    relative_path = file_path[1+len(repo_root):]    
-    man_file.write( relative_path + "\t" + str(check_sum)+"\n" )
-    
+    #we don't want to record the absolute path to our copy, because it would
+    #make it hard to move the project to a new directory or new computer.  I'm
+    #not saying you CAN move a repo, but this isn't the reason you can't.
+    #
+    #So we need to get reduce something like this:
+    #   /path/to/repo/PROJECT/text.txt  <== 
+    #to something like:
+    #   text.txt
+    #Warning: the below only works for flat directories 
+    _, file_name = os.path.split( file_path )
+    print file_name
+    man_file.write(file_name + '\t' + str(check_sum)+'\n')
 
-def ignore( path, repo_directory_path ):
+def ignore(path):
     """ We don't have to implement the functionality to ignore paths yet, but
     as it turns out it's super useful for debugging when our python script is
     producing .pyc paths we don't want tracked, and OUR repo is in a git repo
