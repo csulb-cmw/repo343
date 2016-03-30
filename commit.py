@@ -5,6 +5,10 @@
 # Copyright © 2016 cknapp <cknapp@mbp.local>
 #
 # Distributed under terms of the MIT license.
+"""Commit
+Performs tasks related to performing the `commit` command.
+"""
+
 import os
 import shutil
 from time import gmtime, strftime
@@ -130,6 +134,7 @@ def calculate_check_sum( file_path ):
 
     :file_path: the path to the file to be summed.
     """
+    
     file = open(filename, 'rb')
     sum = 1
     byte = file.read(1)
