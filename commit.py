@@ -125,7 +125,11 @@ def ignore(path):
     #finally a file should be ignored if it's parent is ignored.
     return ignore(path_remainder)
 
-def calculate_check_sum( filename ):
+def calculate_check_sum( file_path ):
+    """Calculate a file's check sum
+
+    :file_path: the path to the file to be summed.
+    """
     file = open(filename, 'rb')
     sum = 1
     byte = file.read(1)
