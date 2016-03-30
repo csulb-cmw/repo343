@@ -94,18 +94,22 @@ def ignore(path):
     :path path of the path we're checking for ignorance.
     :returns true if it's to be ignored, false otherwise"""
 
+    # Whatever the root of of you filesystem is, clearly that shouldn't be
+    # ignored, even if it's a dumb idea to repo it.  Functionally, this is the
+    # base case, for when we test if a parent directory should be ignored.
+    # If a parent is ignored, it's children should be as well.
+    if not path:
+        return False
+
     # make sure we're not backing up the repo
     # currently, it just ignores anything that has a parent directory that's
     # called 'repo343.' this isn't ideal 
-    path_remander, path_component = os.path.split(path)
-    while path_component:
-        if path_component == 'repo343':
-            return True
-        path_remander, path_component = os.path.split(path_remander)
+    path_remainder, path_component = os.path.split(path)
+    if path_component == 'repo343':
+        return True
 
     #ignore files that start with a '.', as a UNIX convention, and also because
     #sometimes other software drops .files without tell the user.
-    path_remander, path_component = os.path.split(path)
     if path_component[0] == '.':
         return True
 
@@ -114,10 +118,12 @@ def ignore(path):
     #we're ignoring an unwanted return value.  splitext returns a name and an
     #extension, and we only care about the extension.
     _, extention = os.path.splitext(path)
-    ignored_types = ['pyc', 'o']
+    ignored_types = ['.pyc', '.o']
     if extention in ignored_types:
         return True
-    return False
+    
+    #finally a file should be ignored if it's parent is ignored.
+    return ignore(path_remainder)
 
 def calculate_check_sum( filename ):
     file = open(filename, 'rb')
