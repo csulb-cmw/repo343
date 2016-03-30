@@ -36,27 +36,28 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id):
 
     project_root = get_project_root()
     #the repo name is the same as the name of the directory containing it's root
+
+    #for my friends who are new to python the underscore in the next line means
+    #we're ignoring an unwanted return value.  splitext returns a name and an
+    #extension, and we only care about the extension.
     _, repo_name = os.path.split(project_root)
 
-    for subdir, dirs, files in os.walk(project_root):
-        for file in files:
-            path = os.path.join(subdir, file)
+    for subdir, _, files in os.walk(project_root):
+        for project_file in files:
+            path = os.path.join(subdir, project_file)
             if not ignore(path):
                 process_file(
-                        project_root, man_file, path,
-                        os.path.join(
-                            project_root,"repo343",repo_name, file) )
-
-    pass
+                    project_root, man_file, path,
+                    os.path.join(
+                        project_root, "repo343", repo_name, project_file))
 
 def get_project_root():
     """ :returns: The repo root for the cwd.
     """
-    return os.getcwd(); # TODO add search for root if we're in a sub directory
+    return os.getcwd() # TODO add search for root if we're in a sub directory
 
-def process_file( project_root, man_file, file_path, repo_directory_path ):
-    """Where the magic happens 
-
+def process_file(project_root, man_file, file_path, repo_directory_path):
+    """Where the magic happens
     :project_root: Root of project directory
     :man_file: Root to manifest file handle
     :file_path: path of the file to process
@@ -66,9 +67,9 @@ def process_file( project_root, man_file, file_path, repo_directory_path ):
 
     # check if the leaf folder exists; create it if not
     if not os.path.exists(repo_directory_path):
-        os.makedirs( repo_directory_path )
+        os.makedirs(repo_directory_path)
 
-    check_sum = calculate_check_sum( file_path )
+    check_sum = calculate_check_sum(file_path)
     # copy the file to the leaf folder
     copy_destination_path = os.path.join(repo_directory_path, str(check_sum))
     shutil.copyfile(file_path, copy_destination_path)
@@ -78,11 +79,11 @@ def process_file( project_root, man_file, file_path, repo_directory_path ):
     #not saying you CAN move a repo, but this isn't the reason you can't.
     #
     #So we need to get reduce something like this:
-    #   /path/to/repo/PROJECT/text.txt  <== 
+    #   /path/to/repo/PROJECT/text.txt
     #to something like:
     #   text.txt
-    #Warning: the below only works for flat directories 
-    _, file_name = os.path.split( file_path )
+    #Warning: the below only works for flat directories
+    _, file_name = os.path.split(file_path)
     man_file.write(file_name + '\t' + str(check_sum)+'\n')
 
 def ignore(path):
@@ -103,7 +104,7 @@ def ignore(path):
 
     # make sure we're not backing up the repo
     # currently, it just ignores anything that has a parent directory that's
-    # called 'repo343.' this isn't ideal 
+    # called 'repo343.' this isn't ideal
     path_remainder, path_component = os.path.split(path)
     if path_component == 'repo343':
         return True
@@ -114,27 +115,24 @@ def ignore(path):
         return True
 
     #ignore some file types we know we'll never want to back up
-    #for my friends who are new to python the underscore in the next line means
-    #we're ignoring an unwanted return value.  splitext returns a name and an
-    #extension, and we only care about the extension.
     _, extention = os.path.splitext(path)
     ignored_types = ['.pyc', '.o']
     if extention in ignored_types:
         return True
-    
+
     #finally a file should be ignored if it's parent is ignored.
     return ignore(path_remainder)
 
-def calculate_check_sum( file_path ):
+def calculate_check_sum(file_path):
     """Calculate a file's check sum
 
     :file_path: the path to the file to be summed.
     """
-    
-    file = open(filename, 'rb')
-    sum = 1
-    byte = file.read(1)
+
+    check_file = open(file_path, 'rb')
+    check_sum = 1
+    byte = check_file.read(1)
     while len(byte) > 0:
-        sum += ord(byte)        
-        byte = file.read(1)
-    return sum % 256
+        check_sum += ord(byte)
+        byte = check_file.read(1)
+    return check_sum  % 256
