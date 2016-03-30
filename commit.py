@@ -99,7 +99,6 @@ def ignore(path):
     # called 'repo343.' this isn't ideal 
     path_remander, path_component = os.path.split(path)
     while path_component:
-        print path_component + '    ' + path_remander
         if path_component == 'repo343':
             return True
         path_remander, path_component = os.path.split(path_remander)
