@@ -83,7 +83,6 @@ def process_file( project_root, man_file, file_path, repo_directory_path ):
     #   text.txt
     #Warning: the below only works for flat directories 
     _, file_name = os.path.split( file_path )
-    print file_name
     man_file.write(file_name + '\t' + str(check_sum)+'\n')
 
 def ignore(path):
@@ -96,13 +95,19 @@ def ignore(path):
     :returns true if it's to be ignored, false otherwise"""
 
     # make sure we're not backing up the repo
-    split_path = os.path.split(path)
-    if split_path[-1] == 'repo343':
-        return True
+    # currently, it just ignores anything that has a parent directory that's
+    # called 'repo343.' this isn't ideal 
+    path_remander, path_component = os.path.split(path)
+    while path_component:
+        print path_component + '    ' + path_remander
+        if path_component == 'repo343':
+            return True
+        path_remander, path_component = os.path.split(path_remander)
 
     #ignore files that start with a '.', as a UNIX convention, and also because
     #sometimes other software drops .files without tell the user.
-    if split_path[-1][0] == '.':
+    path_remander, path_component = os.path.split(path)
+    if path_component[0] == '.':
         return True
 
     #ignore some file types we know we'll never want to back up
