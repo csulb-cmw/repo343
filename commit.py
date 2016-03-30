@@ -13,10 +13,6 @@ import os
 import shutil
 from time import gmtime, strftime
 
-"""
-
-"""
-
 def commit(commit_code, manifest_dir_path, previous_manifest_id):
     """perform a repo commit
 
