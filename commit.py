@@ -21,7 +21,7 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id):
     :previous_manifest_id: id of the last commit
 
     """
-    date_string = strftime("%Y-%m-%d_%H:%M:%S", gmtime())
+    date_string = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
 
     # create a file for writing the manifest data
     man_file_path = os.path.join(manifest_dir_path, date_string)
@@ -99,7 +99,7 @@ def ignore(path):
     # ignored, even if it's a dumb idea to repo it.  Functionally, this is the
     # base case, for when we test if a parent directory should be ignored.
     # If a parent is ignored, it's children should be as well.
-    if not path:
+    if os.path.ismount( path ):
         return False
 
     # make sure we're not backing up the repo
