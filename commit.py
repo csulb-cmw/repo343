@@ -12,6 +12,7 @@ Performs tasks related to performing the `commit` command.
 import os
 import shutil
 from time import gmtime, strftime
+import pathing
 
 def commit(commit_message, manifest_dir_path, previous_commit_id):
     """perform a repo commit
@@ -28,13 +29,13 @@ def commit(commit_message, manifest_dir_path, previous_commit_id):
     man_file = open(man_file_path, 'w')
 
     # write any meta data
-    man_file.write('date ' + date_string +'\"')
+    man_file.write('date ' + date_string +'\n')
     man_file.write('previous_commit_id ' + previous_commit_id + '\n')
     man_file.write('=================================\n')
     man_file.write(commit_message + "\n")
     man_file.write('=================================\n')
 
-    project_root = get_project_root()
+    project_root = pathing.get_project_root()
     #the repo name is the same as the name of the directory containing it's root
 
     #for my friends who are new to python the underscore in the next line means
@@ -47,16 +48,15 @@ def commit(commit_message, manifest_dir_path, previous_commit_id):
             path = os.path.join(subdir, project_file)
             if not ignore(path):
                 process_file(
-                    project_root, man_file, path,
+                    man_file, path,
                     os.path.join(
                         project_root, "repo343", repo_name, project_file))
-                    
-    # finally, record this as the most recent commit
-    set_project_most_recent_commit_id(date_string)
 
-def process_file(project_root, man_file, file_path, repo_directory_path):
+    # finally, record this as the most recent commit
+    pathing.set_project_most_recent_commit_id(date_string)
+
+def process_file(man_file, file_path, repo_directory_path):
     """Where the magic happens
-    :project_root: Root of project directory
     :man_file: Root to manifest file handle
     :file_path: path of the file to process
     :repo_directory_path: path to project root
@@ -97,7 +97,7 @@ def ignore(path):
     # ignored, even if it's a dumb idea to repo it.  Functionally, this is the
     # base case, for when we test if a parent directory should be ignored.
     # If a parent is ignored, it's children should be as well.
-    if os.path.ismount( path ):
+    if os.path.ismount(path):
         return False
 
     # make sure we're not backing up the repo
@@ -135,8 +135,3 @@ def calculate_check_sum(file_path):
         byte = check_file.read(1)
     return check_sum  % 256
 
-def get_last_commit_name_from_manifest():
-    """Scan the manifest file to find the name of the most recent commit
-    """
-    for line in file
-    

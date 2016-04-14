@@ -16,10 +16,10 @@ def get_project_root():
     """
     return os.getcwd() # TODO add search for root if we're in a sub directory
 
-def get_manifest_directory();
+def get_manifest_directory():
     """ :returns: the path the manifest file
     """
-    return os.path.join( get_project_root(), "repo434", "manifests" )
+    return os.path.join( get_project_root(), "repo343", "manifests" )
 
 def get_project_most_recent_commit_id():
     """ The most recent commit is stored in the manifests folder in a file

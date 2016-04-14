@@ -27,7 +27,7 @@ def main():
     if len(sys.argv) == 2:
         if sys.argv[1] == 'create' or sys.argv[1] == 'init':
             call_init()
-        else if sys.argv[1] == 'commit':
+        elif sys.argv[1] == 'commit':
             call_commit()
         else:
             print( "We don't understand command \""+sys.argv[1]+"\"" )
@@ -58,8 +58,8 @@ def call_commit():
     else:
         commit_message = ""
     commit.commit(commit_message,
-            get_manifest_directory(),
-            get_last_commit_name_from_manifest()
+            pathing.get_manifest_directory(),
+            pathing.get_project_most_recent_commit_id())
 
 
-main() # finally, call main
+main() # finally, call explicitly main

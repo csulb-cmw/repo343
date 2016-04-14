@@ -8,6 +8,7 @@
 
 import os
 import commit
+import pathing
 
 """
 
@@ -24,7 +25,7 @@ def init(argv):
     cwd = os.getcwd()
 
     # create manifests folder
-    partial_path_to_manifest = os.path.join(cwd, 'repo343', 'manifests')
+    partial_path_to_manifest = pathing.get_manifest_directory()
 
     if os.path.exists(partial_path_to_manifest):
         print( "Error: manifests directory exists." )
