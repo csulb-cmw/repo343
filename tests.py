@@ -36,6 +36,14 @@ class PathingTests(unittest.TestCase):
             '/test/this/thing/deep/deeper/deepest.txt', '/test/this/thing')
         self.assertEquals(
                 path, '/test/this/thing/repo343/thing/deep/deeper/deepest.txt')
+
+    def test_convert_abs_repo_path_into_relative_repo_file_path_unix_macos(self):
+        """Test for unix/Mac OS style paths"""
+        path = pathing.convert_abs_repo_path_into_relative_repo_file_path(
+            '/test/this/thing/repo343/deeper/deepest.txt', '/test/this/thing')
+        self.assertEquals(
+                path, 'deeper/deepest.txt')
+
         
 if __name__ == '__main__':
     unittest.main()

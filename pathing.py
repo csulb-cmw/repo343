@@ -54,3 +54,8 @@ def convert_abs_file_path_into_abs_repo_file_path(abs_file_path, project_root):
     print (project_root, 'repo343', project_name, relative_file_path )
     return os.path.join(
             project_root, 'repo343', project_name, relative_file_path )
+
+def convert_abs_repo_path_into_relative_repo_file_path(
+        abs_repo_path, project_root):
+    return abs_repo_path[len(project_root)+9:] # len("/repo343/") == 6
+    

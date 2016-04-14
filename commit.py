@@ -47,15 +47,12 @@ def commit(commit_message, manifest_dir_path, previous_commit_id):
         for project_file in files:
             path = os.path.join(subdir, project_file)
             if not ignore(path):
-                process_file(
-                    man_file, path,
-                    os.path.join(
-                        project_root, "repo343", repo_name, project_file))
+                process_file(man_file, path, project_root)
 
     # finally, record this as the most recent commit
     pathing.set_project_most_recent_commit_id(date_string)
 
-def process_file(man_file, file_path, repo_directory_path):
+def process_file(man_file, file_path, project_root):
     """Where the magic happens
     :man_file: Root to manifest file handle
     :file_path: path of the file to process
@@ -63,10 +60,11 @@ def process_file(man_file, file_path, repo_directory_path):
 
     """
 
+    repo_directory_path = pathing.convert_abs_file_path_into_abs_repo_file_path(
+                file_path, project_root)
     # check if the leaf folder exists; create it if not
     if not os.path.exists(repo_directory_path):
         os.makedirs(repo_directory_path)
-
     check_sum = calculate_check_sum(file_path)
     # copy the file to the leaf folder
     copy_destination_path = os.path.join(repo_directory_path, str(check_sum))
@@ -80,9 +78,11 @@ def process_file(man_file, file_path, repo_directory_path):
     #   /path/to/repo/PROJECT/text.txt
     #to something like:
     #   text.txt
-    #Warning: the below only works for flat directories
+    
     _, file_name = os.path.split(file_path)
-    man_file.write(file_name + '\t' + str(check_sum)+'\n')
+    rp = pathing.convert_abs_repo_path_into_relative_repo_file_path(
+            copy_destination_path, project_root)
+    man_file.write(rp + '\t' + str(check_sum)+'\n')
 
 def ignore(path):
     """ We don't have to implement the functionality to ignore paths yet, but
