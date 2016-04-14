@@ -13,12 +13,12 @@ import os
 import shutil
 from time import gmtime, strftime
 
-def commit(commit_code, manifest_dir_path, previous_manifest_id):
+def commit(commit_message, manifest_dir_path, previous_commit_id):
     """perform a repo commit
 
-    :commit_code: human readable commit description.
+    :commit_message: human readable commit description.
     :manifest_dir_path: path to the repo manifest directory
-    :previous_manifest_id: id of the last commit
+    :previous_commit_id: id of the last commit
 
     """
     date_string = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
@@ -29,9 +29,9 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id):
 
     # write any meta data
     man_file.write('date ' + date_string +'\"')
-    man_file.write('previous_manifest_id ' + previous_manifest_id + '\n')
+    man_file.write('previous_commit_id ' + previous_commit_id + '\n')
     man_file.write('=================================\n')
-    man_file.write(commit_code + "\n")
+    man_file.write(commit_message + "\n")
     man_file.write('=================================\n')
 
     project_root = get_project_root()
@@ -50,11 +50,9 @@ def commit(commit_code, manifest_dir_path, previous_manifest_id):
                     project_root, man_file, path,
                     os.path.join(
                         project_root, "repo343", repo_name, project_file))
-
-def get_project_root():
-    """ :returns: The repo root for the cwd.
-    """
-    return os.getcwd() # TODO add search for root if we're in a sub directory
+                    
+    # finally, record this as the most recent commit
+    set_project_most_recent_commit_id(date_string)
 
 def process_file(project_root, man_file, file_path, repo_directory_path):
     """Where the magic happens
@@ -136,3 +134,9 @@ def calculate_check_sum(file_path):
         check_sum += ord(byte)
         byte = check_file.read(1)
     return check_sum  % 256
+
+def get_last_commit_name_from_manifest():
+    """Scan the manifest file to find the name of the most recent commit
+    """
+    for line in file
+    
