@@ -47,3 +47,10 @@ def set_project_most_recent_commit_id(commit_id):
     mrc_file = open(mrc_file_path, 'w')
     mrc_file.write(commit_id)
     # return nothing TODO what's the pythonic nothing/null? 
+
+def convert_abs_file_path_into_abs_repo_file_path(abs_file_path, project_root):
+    relative_file_path = abs_file_path[len(project_root)+1:]
+    _, project_name = os.path.split( project_root )
+    print (project_root, 'repo343', project_name, relative_file_path )
+    return os.path.join(
+            project_root, 'repo343', project_name, relative_file_path )
