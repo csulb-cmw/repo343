@@ -11,17 +11,16 @@ import os
 Some loose functions related to getting the path to important repo documents
 """
 
-def get_project_root():
-    """ :returns: The repo root for the cwd.
-    """
-    return os.getcwd() # TODO add search for root if we're in a sub directory
+def get_project_name(project_root):
+    _, project_name = os.path.split( project_root )
+    return project_name    
 
-def get_manifest_directory():
+def get_manifest_directory(repo_directory):
     """ :returns: the path the manifest file
     """
-    return os.path.join( get_project_root(), "repo343", "manifests" )
+    return os.path.join( repo_directory, "repo343", "manifests" )
 
-def get_project_most_recent_commit_id():
+def get_project_most_recent_commit_id(project_root, repo_directory):
     """ The most recent commit is stored in the manifests folder in a file
     called "most_recent_commit".  The file should always have exactly one line,
     which is the id of the most recent commit, if it exists at all.  This
@@ -29,13 +28,15 @@ def get_project_most_recent_commit_id():
     
     :returns: the most recent commit id, or nothing if it doesn't exist.
     """
-    mrc_file_path = os.path.join(get_manifest_directory(), "most_recent_commit")
+    mrc_file_name = get_project_name(project_root) + ".most_recent_commit"
+    mrc_file_path = os.path.join(
+            get_manifest_directory(repo_directory), mrc_file_name)
     if os.path.exists(mrc_file_path):
         mrc_file = open(mrc_file_path, 'r')
         return mrc_file.readline()
     # return nothing TODO what's the pythonic nothing/null? 
 
-def set_project_most_recent_commit_id(commit_id):
+def set_project_most_recent_commit_id(project_root, repo_directory, commit_id):
     """ The most recent commit is stored in the manifests folder in a file
     called "most_recent_commit".  The file should always have exactly one line,
     which is the id of the most recent commit, if it exists at all.  This
@@ -43,17 +44,22 @@ def set_project_most_recent_commit_id(commit_id):
 
     :commit_id: This will be written as the new most recent commit id
     """
-    mrc_file_path = os.path.join(get_manifest_directory(), "most_recent_commit")
+    mrc_file_name = get_project_name(project_root) + ".most_recent_commit"
+    mrc_file_path = os.path.join(
+            get_manifest_directory(repo_directory), mrc_file_name)
+
     mrc_file = open(mrc_file_path, 'w')
     mrc_file.write(commit_id)
     # return nothing TODO what's the pythonic nothing/null? 
 
-def convert_abs_file_path_into_abs_repo_file_path(abs_file_path, project_root):
+def convert_abs_file_path_into_abs_repo_file_path(
+        abs_file_path, project_root, repo_directory):
     relative_file_path = abs_file_path[len(project_root)+1:]
-    _, project_name = os.path.split( project_root )
-    print (project_root, 'repo343', project_name, relative_file_path )
     return os.path.join(
-            project_root, 'repo343', project_name, relative_file_path )
+            repo_directory,
+            'repo343',
+            get_project_name(project_root),
+            relative_file_path )
 
 def convert_abs_repo_path_into_relative_repo_file_path(
         abs_repo_path, project_root):

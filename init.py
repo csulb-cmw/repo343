@@ -13,19 +13,12 @@ import pathing
 """
 
 """
-def init(argv):
+def init(project_root, repo_directory):
     """perform a repo initialization
-
-    :argv: the argument vars passed from the console.
-    
-    TODO argv should be preprocessed.
-    
     """
 
-    cwd = os.getcwd()
-
     # create manifests folder
-    partial_path_to_manifest = pathing.get_manifest_directory()
+    partial_path_to_manifest = pathing.get_manifest_directory(repo_directory)
 
     if os.path.exists(partial_path_to_manifest):
         print( "Error: manifests directory exists." )
@@ -33,7 +26,7 @@ def init(argv):
     os.makedirs(partial_path_to_manifest)
 
     #do the first commit
-    commit.commit( "initial",partial_path_to_manifest, "none" )
+    commit.commit("initial" ,project_root, repo_directory)
 
 def create_repo_directory( current_working_dir ):
     """Creates a new repo directory, or errors and exits if it exists already."

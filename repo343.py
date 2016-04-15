@@ -7,6 +7,7 @@
 # Distributed under terms of the MIT license.
 
 import sys
+import os
 
 help_string = """
 usage: repo343 <command>
@@ -20,23 +21,23 @@ repo343_version = "0.0.1"
 
 # program globals
 
-project_root = ""
-repo_directory = ""
-
 def main():
     """Program main function
     """
-    if len(sys.argv) == 1:
+    # some parameters are going to be program wide
+    project_root = os.path.abspath(get_argv_option('-p'))
+    repo_directory = os.path.abspath(get_argv_option('-r'))
+    
+    print project_root
+    print repo_directory
+
+    if 'create' in sys.argv or 'init' in sys.argv:
+        call_init(project_root, repo_directory)
+    elif 'commit' in sys.argv:
+        call_commit(project_root, repo_directory)
+    else:
+        print( 'no command found' )
         print_help()
-        exit()
-    if len(sys.argv) == 2:
-        if sys.argv[1] == 'create' or sys.argv[1] == 'init':
-            call_init()
-        elif sys.argv[1] == 'commit':
-            call_commit()
-        else:
-            print( "We don't understand command \""+sys.argv[1]+"\"" )
-            print_help()
 
 def get_argv_option( option_prefix ):
     """Returns the argument that follows the supplied prefix in the argv"""
@@ -53,28 +54,20 @@ def print_help():
     """
     print( help_string )
     
-def call_init():
+def call_init(project_root, repo_directory):
     """call the initialize repo script
     """
     import init
-    init.init(sys.argv)
+    init.init(project_root, repo_directory)
     
-def call_commit():
+def call_commit(project_root, repo_directory):
     """process args for a commit message, and call it
     """
     import commit
     import pathing
     # process the args
     # did the user specify a commit message?
-    if '-m' in sys.argv:
-        # the commit message follows the -m TODO check for bounds because if
-        # '-m' is the last arg, it's crash.
-        commit_message = sys.argv[ sys.argv.index[ '-m'] + 1 ]
-    else:
-        commit_message = ""
-    commit.commit(commit_message,
-            pathing.get_manifest_directory(),
-            pathing.get_project_most_recent_commit_id())
-
+    commit_message = get_argv_option( '-m' )
+    commit.commit(commit_message, project_root, repo_directory)
 
 main() # finally, call explicitly main

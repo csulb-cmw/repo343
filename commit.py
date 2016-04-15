@@ -14,7 +14,7 @@ import shutil
 from time import gmtime, strftime
 import pathing
 
-def commit(commit_message, manifest_dir_path, previous_commit_id):
+def commit(commit_message, project_root, repo_directory):
     """perform a repo commit
 
     :commit_message: human readable commit description.
@@ -24,9 +24,16 @@ def commit(commit_message, manifest_dir_path, previous_commit_id):
     """
     date_string = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
 
+    previous_commit_id = pathing.get_project_most_recent_commit_id(
+            project_root, repo_directory)
+    if not previous_commit_id:
+        previous_commit_id = "initial"
+
     # create a file for writing the manifest data
-    man_file_path = os.path.join(manifest_dir_path, date_string)
+    man_file_path = os.path.join(
+            pathing.get_manifest_directory(repo_directory), date_string)
     man_file = open(man_file_path, 'w')
+
 
     # write any meta data
     man_file.write('date ' + date_string +'\n')
@@ -35,7 +42,6 @@ def commit(commit_message, manifest_dir_path, previous_commit_id):
     man_file.write(commit_message + "\n")
     man_file.write('=================================\n')
 
-    project_root = pathing.get_project_root()
     #the repo name is the same as the name of the directory containing it's root
 
     #for my friends who are new to python the underscore in the next line means
@@ -47,12 +53,13 @@ def commit(commit_message, manifest_dir_path, previous_commit_id):
         for project_file in files:
             path = os.path.join(subdir, project_file)
             if not ignore(path):
-                process_file(man_file, path, project_root)
+                process_file(man_file, path, project_root, repo_directory)
 
     # finally, record this as the most recent commit
-    pathing.set_project_most_recent_commit_id(date_string)
+    pathing.set_project_most_recent_commit_id(
+            project_root, repo_directory, date_string)
 
-def process_file(man_file, file_path, project_root):
+def process_file(man_file, file_path, project_root, repo_directory):
     """Where the magic happens
     :man_file: Root to manifest file handle
     :file_path: path of the file to process
@@ -61,13 +68,14 @@ def process_file(man_file, file_path, project_root):
     """
 
     repo_directory_path = pathing.convert_abs_file_path_into_abs_repo_file_path(
-                file_path, project_root)
+                file_path, project_root, repo_directory)
     # check if the leaf folder exists; create it if not
     if not os.path.exists(repo_directory_path):
         os.makedirs(repo_directory_path)
     check_sum = calculate_check_sum(file_path)
     # copy the file to the leaf folder
     copy_destination_path = os.path.join(repo_directory_path, str(check_sum))
+    
     shutil.copyfile(file_path, copy_destination_path)
 
     #we don't want to record the absolute path to our copy, because it would
