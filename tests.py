@@ -1,6 +1,26 @@
 import unittest
 from commit import ignore 
 import pathing
+import sys
+import repo343
+class Repo343Tests(unittest.TestCase):
+    def test_get_argv_option_success(self):
+        #mock args
+        sys.argv[0] = '-t'
+        sys.argv[1] = 'test'
+        self.assertEquals(repo343.get_argv_option('-t'), 'test')
+
+    def test_get_argv_option_doesnt_exist_fail(self):
+        #mock args
+        sys.argv[0] = '-t'
+        sys.argv[1] = 'test'
+        self.assertFalse(repo343.get_argv_option('-f'))
+
+    def test_get_argv_option_end_of_line_fail(self):
+        #mock args
+        sys.argv[0] = '-t'
+        sys.argv[1] = '-m'
+        self.assertFalse(repo343.get_argv_option('-m'))
 
 class CommitTests(unittest.TestCase):
     """Tests for `commit.py`."""
