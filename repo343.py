@@ -18,6 +18,11 @@ These are the supported commands used in various situations:
 
 repo343_version = "0.0.1"
 
+# program globals
+
+project_root = ""
+repo_directory = ""
+
 def main():
     """Program main function
     """
@@ -32,6 +37,16 @@ def main():
         else:
             print( "We don't understand command \""+sys.argv[1]+"\"" )
             print_help()
+
+def get_argv_option( option_prefix ):
+    """Returns the argument that follows the supplied prefix in the argv"""
+    try:
+        index =  sys.argv.index(option_prefix) + 1 
+    except Exception as e:
+        return #not found   
+    if index < len(sys.argv):
+        return sys.argv[index]
+    return #nothing
 
 def print_help():
     """Prints the help info
