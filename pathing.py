@@ -34,7 +34,8 @@ def get_project_most_recent_commit_id(project_root, repo_directory):
     if os.path.exists(mrc_file_path):
         mrc_file = open(mrc_file_path, 'r')
         return mrc_file.readline()
-    # return nothing TODO what's the pythonic nothing/null? 
+    print( 'couldn\'t find \'%s\'' % mrc_file_path )
+    # return nothing TODO what's the pythonic nothing/null?
 
 def set_project_most_recent_commit_id(project_root, repo_directory, commit_id):
     """ The most recent commit is stored in the manifests folder in a file
@@ -63,5 +64,5 @@ def convert_abs_file_path_into_abs_repo_file_path(
 
 def convert_abs_repo_path_into_relative_repo_file_path(
         abs_repo_path, project_root):
-    return abs_repo_path[len(project_root)+9:] # len("/repo343/") == 6
+    return abs_repo_path[len(project_root)+11:] # len("/repo343/") == 6
     

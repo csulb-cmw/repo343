@@ -8,7 +8,7 @@
 """Commit
 Performs tasks related to performing the `commit` command.
 """
-
+from __future__ import print_function
 import os
 import shutil
 from time import gmtime, strftime
@@ -36,11 +36,11 @@ def commit(commit_message, project_root, repo_directory):
 
 
     # write any meta data
-    man_file.write('date ' + date_string +'\n')
-    man_file.write('previous_commit_id ' + previous_commit_id + '\n')
-    man_file.write('=================================\n')
-    man_file.write(commit_message + "\n")
-    man_file.write('=================================\n')
+    print('date ' + date_string, file=man_file)
+    print('previous_commit_id ' + previous_commit_id, file=man_file)
+    print('=================================', file=man_file)
+    print(commit_message, file=man_file)
+    print('=================================', file=man_file)
 
     #the repo name is the same as the name of the directory containing it's root
 
@@ -89,8 +89,8 @@ def process_file(man_file, file_path, project_root, repo_directory):
     
     _, file_name = os.path.split(file_path)
     rp = pathing.convert_abs_repo_path_into_relative_repo_file_path(
-            copy_destination_path, project_root)
-    man_file.write(rp + '\t' + str(check_sum)+'\n')
+            repo_directory_path, project_root)
+    man_file.write(os.path.join(rp,str(check_sum))+"\n")
 
 def ignore(path):
     """ We don't have to implement the functionality to ignore paths yet, but

@@ -35,6 +35,8 @@ def main():
         call_init(project_root, repo_directory)
     elif 'commit' in sys.argv:
         call_commit(project_root, repo_directory)
+    elif 'checkout' in sys.argv:
+        call_checkout(project_root, repo_directory)
     else:
         print( 'no command found' )
         print_help()
@@ -68,6 +70,12 @@ def call_commit(project_root, repo_directory):
     # process the args
     # did the user specify a commit message?
     commit_message = get_argv_option( '-m' )
+    if not commit_message:
+        commit_message = ""
     commit.commit(commit_message, project_root, repo_directory)
+
+def call_checkout(project_root, repo_directory):
+    import checkout
+    checkout.checkout(project_root, repo_directory)
 
 main() # finally, call explicitly main
