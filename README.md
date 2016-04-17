@@ -7,8 +7,8 @@ Part one of the CECS-343 VCS project.
 * William Perez (billyreaper@yahoo.com)
 
 # introduction
-This is part one our version control system, which only implements the
-create repo command, which functions under only certain conditions.
+This is part two of our version control system, which implements the create,
+commit, and checkout functions
 
 # Usage instructions
 ## External Requirements
@@ -21,10 +21,11 @@ this software can be installed by using the git `clone` command with the
 URL `https://github.com/csulb-cmw/repo343` as the first argument.
 
 ## Usage
+### create function
 The create repo command can be invoked using
 `python \path\to\script\directory\repo343 create` or 
 `python \path\to\script\directory\repo343 init`
-and should be invoked while in the root directory of the project to be
-commited to the new repo.  If permission to execute the file is given via
-the `chmod +x \path\to\script\directory\repo343` then they python portion
-of the previous commands can be ommited.
+The command requires two parameters: the path to the directory that's to be
+stored in the repository, and a path to the repository folder, denoted by 
+prefix arguments `-p` and `-r` respectivly.  For example:
+`repo343 init -p project/path -r repo/path`.
