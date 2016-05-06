@@ -20,10 +20,8 @@ def init(project_root, repo_directory):
     # create manifests folder
     partial_path_to_manifest = pathing.get_manifest_directory(repo_directory)
 
-    if os.path.exists(partial_path_to_manifest):
-        print( "Error: manifests directory exists." )
-        exit()
-    os.makedirs(partial_path_to_manifest)
+    if not os.path.exists(partial_path_to_manifest):
+        os.makedirs(partial_path_to_manifest)
 
     #do the first commit
     commit.commit("initial" ,project_root, repo_directory)

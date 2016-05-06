@@ -49,3 +49,20 @@ prefix arguments `-p` and `-r` respectivly.  For example:
 needs to match the name of an existing repository.  In the previous example,
 the command would check out an existing project called `path` from the
 repository located at `repo/path`.
+
+### merge function
+Merge one repository into another
+`python \path\to\script\repo343 merge` 
+The command requires two parameters: the path to a directory which is to become
+the new root of the project branch, and a path to the repository folder, denoted by 
+prefix arguments `-p` and `-r` respectivly.
+
+When the merge function is run, the user is presented with a list of projects
+that are being stored in the repository directory supplied by the `-r` option.
+If the user enters anything other then the supplied options, the merge is
+canceled.  The user is then shown a list of commits assosated with that brance.
+When a selection is made, the files from the foreign repo will be copied into
+the project when no conflicts accure, and when they do accure it's copy files
+with modiffied file names, `_MT` being appended to the exisiting file, `_MR`
+being appened to the repository version, and `_MG` to the most recent common
+ancestor file, if they share a common ancestor.

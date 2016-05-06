@@ -66,18 +66,16 @@ def process_file(man_file, file_path, project_root, repo_directory):
     :repo_directory_path: path to project root
 
     """
-
     repo_directory_path = pathing.convert_abs_file_path_into_abs_repo_file_path(
                 file_path, project_root, repo_directory)
     # check if the leaf folder exists; create it if not
     if not os.path.exists(repo_directory_path):
         os.makedirs(repo_directory_path)
-    check_sum = calculate_check_sum(file_path)
+    check_sum = pathing.calculate_check_sum(file_path)
     # copy the file to the leaf folder
     copy_destination_path = os.path.join(repo_directory_path, str(check_sum))
     
     shutil.copyfile(file_path, copy_destination_path)
-
     #we don't want to record the absolute path to our copy, because it would
     #make it hard to move the project to a new directory or new computer.  I'm
     #not saying you CAN move a repo, but this isn't the reason you can't.
@@ -128,18 +126,3 @@ def ignore(path):
 
     #finally a file should be ignored if it's parent is ignored.
     return ignore(path_remainder)
-
-def calculate_check_sum(file_path):
-    """Calculate a file's check sum
-
-    :file_path: the path to the file to be summed.
-    """
-
-    check_file = open(file_path, 'rb')
-    check_sum = 1
-    byte = check_file.read(1)
-    while len(byte) > 0:
-        check_sum += ord(byte)
-        byte = check_file.read(1)
-    return check_sum  % 256
-
